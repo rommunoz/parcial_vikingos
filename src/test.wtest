@@ -1,0 +1,59 @@
+import Vikingo.*
+import CastasSociales.*
+import Expedicion.*
+import Lugares.*
+import Iglesia.*
+
+describe "Parcial" {
+	var vikingo1
+	var vikingo2
+	var expedicion1
+	var capital1
+	var aldea1
+	var iglesia15
+	
+	method initialize() {
+		vikingo1 = new Soldado(vidasCobradas = 21, castaSocial = karl)
+		vikingo2 = new Soldado(vidasCobradas = 22, castaSocial = karl, cantidadDeArmas = 3)
+		
+		capital1 = new Capital(cantidadDeDefensores = 2, factorDeRiqueza = 3)
+		aldea1 = new Aldea()
+		iglesia15 = new Iglesia(cantidadDeCrucifijos = 15) //eran muy fanaticos che... mejor que 15 iglesias con uno cada una 
+		aldea1.agregarIglesia(iglesia15) 
+		
+		expedicion1 = new Expedicion()
+		expedicion1.lugaresAInvadir().addAll([aldea1, capital1]) // rompe el encapsulamiento?
+		
+	}
+	
+	test "1-2- Un vikingo1 NO puede subir porque es un Soldado sin armas" {
+		assert.throwsExceptionWithMessage("El soldado no tiene armas", {vikingo1.intentarSubirAExpedicion(expedicion1)})
+	}
+	
+	test "1-2- Un vikingo2 puede subir porque adquiere un arma y entonces es un Soldado productivo" {
+		vikingo1.adquirirCantDeArmas(1)
+		vikingo1.intentarSubirAExpedicion(expedicion1)
+		assert.equals(1, expedicion1.vikingos().size())
+	}
+	
+	test "2-2- Una expedicion2 valeLaPena porque todas sus invasiones valen la pena" {
+		vikingo1.adquirirCantDeArmas(1)
+		vikingo1.intentarSubirAExpedicion(expedicion1)
+		vikingo2.intentarSubirAExpedicion(expedicion1)
+		assert.equals(2, expedicion1.vikingos().size())
+		assert.equals(true, expedicion1.valeLaPena())
+	}
+	
+	//Punto 4
+	/* Aparecen los castillos, que son un nuevo posible objetivo
+	 * a invadir además de las aldeas y capitales. 
+	 * ¿Pueden agregarse sin modificar código existente? 
+	 * Explicar cómo agregarlo. Justificar conceptualmente.
+	 */
+	//Respuesta: 
+	/* Con un objeto o clase que cumpla la interfaz de los Lugares ya basta para implementarlo, 
+	 * Los mensajes para polimorfismo estan en la clase abstracta Lugar. 
+	 * Puede heredar o no dependiendo de los metodos propios del Castillo que debo codificar
+	 */
+	
+}
