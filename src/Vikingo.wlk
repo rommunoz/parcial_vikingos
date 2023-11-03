@@ -13,11 +13,12 @@ class Vikingo {
 	}
 	
 	method ascenderA(nuevaCasta){
-		castaSocial = nuevaCasta
 		castaSocial.beneficioPara(self)
+		castaSocial = nuevaCasta
 	}
 	
 	method bonoPorAscensoAKarl()
+	method bonoPorAscensoAThrall()
 	
 	//punto3
 	method cobrarBotin(unaCantidad){
@@ -34,7 +35,8 @@ class Vikingo {
 	}
 	
 	method validarIrAExpedicion(){
-		castaSocial.puedeIrAExpedicion(self)
+		if (not castaSocial.puedeIrA(self))
+			throw new Exception(message = "El vikingo es un esclavo y tiene armas")
 		self.esProductivo()
 	}
 	
@@ -68,6 +70,10 @@ class Soldado inherits Vikingo {
 	override method bonoPorAscensoAKarl(){
 		self.adquirirCantDeArmas(10)
 	}
+	
+	override method bonoPorAscensoAThrall(){
+		riqueza += 30000 //arbitrario mio
+	}
 }
 
 class Granjero inherits Vikingo {
@@ -75,7 +81,7 @@ class Granjero inherits Vikingo {
 	var hectareasPropias = 0
 	
 	override method esProductivo(){
-		if (! self.hectareasPropias()/2 >= self.hijos()) throw new Exception(message = "El granjero no puede alimentar a sus hijos, no es productivo")
+		if (! hectareasPropias/2 >= hijos) throw new Exception(message = "El granjero no puede alimentar a sus hijos, no es productivo")
 		return true
 	}
 	
@@ -85,14 +91,16 @@ class Granjero inherits Vikingo {
 		self.aumentarHectareasEn(2)
 	}
 	
+	override method bonoPorAscensoAThrall(){ //arbitrario mio
+		self.aumentarHijosEn(3)
+		self.aumentarHectareasEn(50)
+		riqueza *= 40
+	}
+	
 	method aumentarHijosEn(unaCantidad) {
 		hijos += unaCantidad
 	}
 	method aumentarHectareasEn(unaCantidad){
 		hectareasPropias += unaCantidad
 	}
-	
-	method hectareasPropias() = hectareasPropias
-	
-	method hijos() = hijos
 }
